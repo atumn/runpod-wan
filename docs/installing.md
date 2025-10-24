@@ -30,24 +30,36 @@ source /workspace/venv/bin/activate
 
 # Install Torch 
 pip install --no-cache-dir torch==2.7.0+cu128 --index-url https://download.pytorch.org/whl/cu128 --no-deps
-pip install --no-cache-dir torchvision==0.22.0+cu128 torchaudio==2.7.0 --index-url https://download.pytorch.org/whl/cu128
+# pip install --no-cache-dir torchvision==0.22.0+cu128 torchaudio==2.7.0 --index-url https://download.pytorch.org/whl/cu128
+pip install torch==2.7.0+cu128 torchvision==0.22.0+cu128 torchaudio==2.7.0 --extra-index-url https://download.pytorch.org/whl/cu128
 
 # Install ComfyUI
 pip install -r requirements.txt
 
 # Installing ComfyUI Manager
 git clone https://github.com/ltdrdata/ComfyUI-Manager.git custom_nodes/ComfyUI-Manager
-cd custom_nodes/ComfyUI-Manager
-pip install -r requirements.txt
+pip install -r custom_nodes/ComfyUI-Manager/requirements.txt
 
 # Installing KJNodes
 git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes
-cd custom_nodes/ComfyUI-KJNodes
-pip install -r requirements.txt
+pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt
 
-git clone https://github.com/welltop-cn/ComfyUI-TeaCache.git custom_nodes/ComfyUI-TeaCache
-cd custom_nodes/ComfyUI-TeaCache
-pip install -r requirements.txt
+# Install Rife interpolation
+git clone https://github.com/yuvraj108c/ComfyUI-Rife-Tensorrt custom_nodes/ComfyUI-Rife-Tensorrt
+pip install -r custom_nodes/ComfyUI-Rife-Tensorrt/requirements.txt
+
+# WAN video wrapper
+git clone https://github.com/kijai/ComfyUI-WanVideoWrapper custom_nodes/ComfyUI-WanVideoWrapper
+pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt
+
+git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite custom_nodes/ComfyUI-VideoHelperSuite
+pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt
+
+# required for WAN animate
+git clone https://github.com/kijai/ComfyUI-WanAnimatePreprocess custom_nodes/ComfyUI-WanAnimatePreprocess
+pip install -r custom_nodes/ComfyUI-WanAnimatePreprocess/requirements.txt
+    
+git clone https://github.com/kijai/ComfyUI-segment-anything-2 custom_nodes/ComfyUI-segment-anything-2
 ```
 2. Install the Serverless dependencies:
 ```bash
@@ -61,7 +73,7 @@ pip install mutagen
 # RUN pip install /tmp/sageattention-2.1.1-cp310-cp310-linux_x86_64.whl
 git clone https://github.com/thu-ml/SageAttention.git
 cd SageAttention 
-python setup.py install  # or pip install -e .
+python setup.py install  # or `pip install -e .` <- seems to work better
 
 ```
 3. Download models:
@@ -86,9 +98,25 @@ aria2c -x16 -s16 -d /workspace/models/clip_vision -o clip_vision_h.safetensors -
 aria2c -x16 -s16 -d /workspace/models/vae -o wan_2.1_vae_.safetensors --continue=true https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors
 
 # see loras.md for LORAs
+
+# WAN2.2-Animate
+aria2c -x16 -s16 -d /workspace/models/vae -o Wan2_1_VAE_bf16.safetensors --continue=true https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Wan2_1_VAE_bf16.safetensors
+aria2c -x16 -s16 -d /workspace/models/clip_vision -o clip_vision_h.safetensors --continue=true https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/clip_vision/clip_vision_h.safetensors
+aria2c -x16 -s16 -d /workspace/models/text_encoders -o umt5-xxl-enc-bf16.safetensors --continue=true https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/umt5-xxl-enc-bf16.safetensors
+aria2c -x16 -s16 -d /workspace/models/loras -o WanAnimate_relight_lora_fp16.safetensors --continue=true https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/LoRAs/Wan22_relight/WanAnimate_relight_lora_fp16.safetensors
+aria2c -x16 -s16 -d /workspace/models/loras -o lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors --continue=true https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Lightx2v/lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors
+aria2c -x16 -s16 -d /workspace/models/diffusion_models -o Wan2_2-Animate-14B_fp8_scaled_e4m3fn_KJ_v2.safetensors --continue=true https://huggingface.co/Kijai/WanVideo_comfy_fp8_scaled/resolve/main/Wan22Animate/Wan2_2-Animate-14B_fp8_scaled_e4m3fn_KJ_v2.safetensors
+
+aria2c -x16 -s16 -d /workspace/models/diffusion_models -o Wan2_2-Animate-14B_fp8_scaled_e5m2_KJ_v2.safetensors --continue=true https://huggingface.co/Kijai/WanVideo_comfy_fp8_scaled/resolve/main/Wan22Animate/Wan2_2-Animate-14B_fp8_scaled_e5m2_KJ_v2.safetensors
+
+# detection
+aria2c -x16 -s16 -d /workspace/models/detection -o yolov10m.onnx --continue=true https://huggingface.co/Wan-AI/Wan2.2-Animate-14B/resolve/main/process_checkpoint/det/yolov10m.onnx
+aria2c -x16 -s16 -d /workspace/models/detection -o vitpose_h_wholebody_model.onnx --continue=true https://huggingface.co/Kijai/vitpose_comfy/resolve/main/onnx/vitpose_h_wholebody_model.onnx
+aria2c -x16 -s16 -d /workspace/models/detection -o vitpose_h_wholebody_data.bin --continue=true https://huggingface.co/Kijai/vitpose_comfy/resolve/main/onnx/vitpose_h_wholebody_data.bin
 ```
 
-6. Create logs directory:
+4. Create extra_model_paths.yaml file:
 ```bash
-mkdir -p /workspace/logs
+touch /workspace/comfywan/extra_model_paths.yaml
+# contents in the file at root path of this repo
 ```
