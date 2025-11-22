@@ -44,6 +44,13 @@ pip install -r custom_nodes/ComfyUI-Manager/requirements.txt
 git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes
 pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt
 
+# install ComfyUI-GGUF
+git clone https://github.com/city96/ComfyUI-GGUF custom_nodes/ComfyUI-GGUF
+pip install -r custom_nodes/ComfyUI-GGUF/requirements.txt
+
+# rgthree nodes
+git clone https://github.com/rgthree/rgthree-comfy.git custom_nodes/rgthree-comfy
+
 # Install Rife interpolation
 git clone https://github.com/yuvraj108c/ComfyUI-Rife-Tensorrt custom_nodes/ComfyUI-Rife-Tensorrt
 pip install -r custom_nodes/ComfyUI-Rife-Tensorrt/requirements.txt
@@ -73,7 +80,7 @@ pip install mutagen
 # RUN pip install /tmp/sageattention-2.1.1-cp310-cp310-linux_x86_64.whl
 git clone https://github.com/thu-ml/SageAttention.git
 cd SageAttention 
-python setup.py install  # or `pip install -e .` <- seems to work better
+pip install --no-build-isolation --no-cache-dir --force-reinstall --compile .
 
 ```
 3. Download models:
@@ -87,21 +94,19 @@ aria2c -x16 -s16 -d /workspace/models/diffusion_models -o wan2.2_t2v_high_noise_
 aria2c -x16 -s16 -d /workspace/models/diffusion_models -o wan2.2_t2v_low_noise_14B_Q5_K_M.gguf --continue=true https://huggingface.co/bullerwins/Wan2.2-T2V-A14B-GGUF/resolve/main/wan2.2_t2v_low_noise_14B_Q5_K_M.gguf
 
 # Download text encoders also GGUF
-aria2c -x16 -s16 -d /workspace/models/text_encoders -o umt5-xxl-encoder-Q8_0.gguf --continue=true https://huggingface.co/city96/umt5-xxl-encoder-gguf/resolve/main/umt5-xxl-encoder-Q8_0.gguf
-
 aria2c -x16 -s16 -d /workspace/models/text_encoders -o umt5_xxl_fp8_e4m3fn_scaled.safetensors --continue=true https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors
 
 # Create CLIP vision directory and download models
 aria2c -x16 -s16 -d /workspace/models/clip_vision -o clip_vision_h.safetensors --continue=true https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/clip_vision/clip_vision_h.safetensors
 
 # Download VAE
-aria2c -x16 -s16 -d /workspace/models/vae -o wan_2.1_vae_.safetensors --continue=true https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors
+aria2c -x16 -s16 -d /workspace/models/vae -o wan_2.1_vae.safetensors --continue=true https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors
 
 # see loras.md for LORAs
 
 # WAN2.2-Animate
 aria2c -x16 -s16 -d /workspace/models/vae -o Wan2_1_VAE_bf16.safetensors --continue=true https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Wan2_1_VAE_bf16.safetensors
-aria2c -x16 -s16 -d /workspace/models/clip_vision -o clip_vision_h.safetensors --continue=true https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/clip_vision/clip_vision_h.safetensors
+# aria2c -x16 -s16 -d /workspace/models/clip_vision -o clip_vision_h.safetensors --continue=true https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/clip_vision/clip_vision_h.safetensors
 aria2c -x16 -s16 -d /workspace/models/text_encoders -o umt5-xxl-enc-bf16.safetensors --continue=true https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/umt5-xxl-enc-bf16.safetensors
 aria2c -x16 -s16 -d /workspace/models/loras -o WanAnimate_relight_lora_fp16.safetensors --continue=true https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/LoRAs/Wan22_relight/WanAnimate_relight_lora_fp16.safetensors
 aria2c -x16 -s16 -d /workspace/models/loras -o lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors --continue=true https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Lightx2v/lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors
